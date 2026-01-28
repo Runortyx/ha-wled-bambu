@@ -1,0 +1,113 @@
+alias: Bambu Druckstatus WLED
+description: Steuert WLED über Preset-Namen als Effekt
+triggers:
+  - entity_id:
+      - sensor.p2s_XXXXXXXXXXXXXXX_druckfortschritt
+      - sensor.p2s_XXXXXXXXXXXXXXX_druckstatus
+    trigger: state
+actions:
+  - choose:
+      - conditions:
+          - condition: state
+            entity_id: sensor.p2s_XXXXXXXXXXXXXXX_druckstatus
+            state:
+              - prepare
+        sequence:
+          - device_id: 88ecfc8eb38588b226fdd95e2ab70c9e
+            domain: select
+            entity_id: 8545f38fa3795ce5f9bb41e7df2deaca
+            type: select_option
+            option: 6Preparing
+      - conditions:
+          - condition: state
+            entity_id: sensor.p2s_XXXXXXXXXXXXXXX_druckstatus
+            state:
+              - failed
+        sequence:
+          - device_id: 88ecfc8eb38588b226fdd95e2ab70c9e
+            domain: select
+            entity_id: 8545f38fa3795ce5f9bb41e7df2deaca
+            type: select_option
+            option: 7Error
+      - conditions:
+          - condition: state
+            entity_id: sensor.p2s_XXXXXXXXXXXXXXX_druckstatus
+            state:
+              - finish
+        sequence:
+          - device_id: 88ecfc8eb38588b226fdd95e2ab70c9e
+            domain: select
+            entity_id: 8545f38fa3795ce5f9bb41e7df2deaca
+            type: select_option
+            option: 8Finish
+      - conditions:
+          - condition: state
+            entity_id: sensor.p2s_XXXXXXXXXXXXXXX_druckstatus
+            state: idle
+        sequence:
+          - device_id: 88ecfc8eb38588b226fdd95e2ab70c9e
+            domain: select
+            entity_id: 8545f38fa3795ce5f9bb41e7df2deaca
+            type: select_option
+            option: 9Idle
+      - conditions:
+          - condition: state
+            entity_id: sensor.p2s_XXXXXXXXXXXXXXX_druckstatus
+            state: running
+        sequence:
+          - choose:
+              - conditions:
+                  - condition: numeric_state
+                    entity_id: sensor.p2s_XXXXXXXXXXXXXXX_druckfortschritt
+                    below: 20
+                sequence:
+                  - device_id: 88ecfc8eb38588b226fdd95e2ab70c9e
+                    domain: select
+                    entity_id: 8545f38fa3795ce5f9bb41e7df2deaca
+                    type: select_option
+                    option: u20
+              - conditions:
+                  - condition: numeric_state
+                    entity_id: sensor.p2s_XXXXXXXXXXXXXXX_druckfortschritt
+                    above: 19
+                    below: 40
+                sequence:
+                  - device_id: 88ecfc8eb38588b226fdd95e2ab70c9e
+                    domain: select
+                    entity_id: 8545f38fa3795ce5f9bb41e7df2deaca
+                    type: select_option
+                    option: u40
+              - conditions:
+                  - condition: numeric_state
+                    entity_id: sensor.p2s_XXXXXXXXXXXXXXX_druckfortschritt
+                    above: 39
+                    below: 60
+                sequence:
+                  - device_id: 88ecfc8eb38588b226fdd95e2ab70c9e
+                    domain: select
+                    entity_id: 8545f38fa3795ce5f9bb41e7df2deaca
+                    type: select_option
+                    option: u60
+              - conditions:
+                  - condition: numeric_state
+                    entity_id: sensor.p2s_XXXXXXXXXXXXXXX_druckfortschritt
+                    above: 59
+                    below: 80
+                sequence:
+                  - device_id: 88ecfc8eb38588b226fdd95e2ab70c9e
+                    domain: select
+                    entity_id: 8545f38fa3795ce5f9bb41e7df2deaca
+                    type: select_option
+                    option: u80
+              - conditions:
+                  - condition: numeric_state
+                    entity_id: sensor.p2s_XXXXXXXXXXXXXXX_druckfortschritt
+                    above: 79
+                    below: 100
+                sequence:
+                  - device_id: 88ecfc8eb38588b226fdd95e2ab70c9e
+                    domain: select
+                    entity_id: 8545f38fa3795ce5f9bb41e7df2deaca
+                    type: select_option
+                    option: u100
+mode: restart
